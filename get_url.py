@@ -42,8 +42,7 @@ def get_urls(url):
 
 def download_by_aria2c(video_list):
     for i, l in enumerate(video_list):
-        print "%02d" % (i)
-        os.system("aria2c '%s' -o %02d.mp4" % (l, i))
+        os.system("aria2c '%s' -s10 -k2m -o %02d.mp4" % (l, i))
 
 
 if __name__ == "__main__":
