@@ -4,7 +4,8 @@ import argparse
 import re
 import urllib2
 import json
-import os
+import sys
+import subprocess
 
 
 def get_urls(url):
@@ -42,7 +43,16 @@ def get_urls(url):
 
 def download_by_aria2c(video_list):
     for i, l in enumerate(video_list):
-        os.system("aria2c '%s' -s10 -k2m -o %02d.mp4" % (l, i))
+        try:
+            process = subprocess.Popen(
+                "aria2c '%s' -s10 -k2m -o %02d.mp4" % (l, i), shell=True
+            )
+            process.wait()
+        except KeyboardInterrupt:
+            print "Interrupted!!"
+            sys.exit(0)
+        except Exception as e:
+            print e
 
 
 if __name__ == "__main__":
