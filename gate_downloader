@@ -45,7 +45,7 @@ def download_by_aria2c(video_list):
     for i, l in enumerate(video_list):
         try:
             process = subprocess.Popen(
-                "aria2c '%s' -s10 -k2m -o %02d.mp4" % (l, i), shell=True
+                "aria2c '%s' -s10 -k2m -o %02d.mp4" % (l, i + 1), shell=True
             )
             process.wait()
         except KeyboardInterrupt:
