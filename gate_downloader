@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -83,8 +84,11 @@ def download_by_aria2c(title, video_list):
             else:
                 print "unknown file extendsion: %s" % (l['type'])
 
+            if not os.path.exists("%s" % title):
+                os.makedirs(title)
+
             process = subprocess.Popen(
-                "aria2c '%s' -s10 -k2m -o '%s[%02d].%s'" % (l['url'], title.decode('utf-8'), i + 1, ext), shell=True
+                "aria2c '%s' -s10 -k2m -o '%s/%s[%02d].%s'" % (l['url'], title.decode('utf-8'), title.decode('utf-8'), i + 1, ext), shell=True
             )
             process.wait()
         except KeyboardInterrupt:
