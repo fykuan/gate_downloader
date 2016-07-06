@@ -9,6 +9,14 @@ import subprocess
 
 
 def get_title(url):
+    """[Get anime title from animme root url]
+
+    Arguments:
+        url {[string]} -- [Anime root url]
+
+    Returns:
+        [string] -- [Anime title]
+    """
     try:
         response = urllib2.urlopen("%s" % url)
         html = response.read()
@@ -21,6 +29,14 @@ def get_title(url):
 
 
 def get_urls(url):
+    """[Get all video urls for specific anime]
+
+    Arguments:
+        url {[string]} -- [root url for each anime]
+
+    Returns:
+        [list] -- [video urls for each episode]
+    """
     # phase 1
     try:
         response = urllib2.urlopen("%s" % url)
@@ -53,6 +69,12 @@ def get_urls(url):
 
 
 def download_by_aria2c(title, video_list):
+    """[Download all video files in title[] using aria2c, and named them by anime title]
+
+    Arguments:
+        title {[string]} -- [Anime title]
+        video_list {[string]} -- [list of all video files]
+    """
     for i, l in enumerate(video_list):
         try:
             process = subprocess.Popen(
