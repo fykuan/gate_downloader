@@ -23,7 +23,6 @@ def get_title(url):
         html = response.read()
 
         result = re.findall(r"<title>(.*?)\s-", html)
-        print result[0]
         return result[0]
     except Exception as e:
         print e
@@ -54,7 +53,6 @@ def get_urls(url):
     video_url = []
     for i, r in enumerate(pages):
         try:
-            print r
             request = urllib2.Request(r)
             request.add_header('User-Agent', 'Mozilla/5.0')
             response = urllib2.urlopen(request)
@@ -77,6 +75,8 @@ def download_by_aria2c(title, video_list):
         title {[string]} -- [Anime title]
         video_list {[string]} -- [list of all video files]
     """
+
+    print "[Downloading] %s" % (title)
     for i, l in enumerate(video_list):
         try:
             if l['type'] == "video/mp4":
