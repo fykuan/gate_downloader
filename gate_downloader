@@ -61,8 +61,9 @@ def get_urls(url):
             result = re.findall(r"var\splaylist\s=\s(\[.*?\]);", html, re.S)
             j = json.loads(result[0])
             size = len(j[0]['sources'])
+            type = j[0]['sources'][size - 1]['type']
             max = j[0]['sources'][size - 1]['file']
-            video_url.append(max)
+            video_url.append(dict({'url': max, 'type': type}))
         except Exception as e:
             print e
     return video_url
@@ -77,8 +78,13 @@ def download_by_aria2c(title, video_list):
     """
     for i, l in enumerate(video_list):
         try:
+            if l['type'] == "video/mp4":
+                ext = "mp4"
+            else:
+                print "unknown file extendsion: %s" % (l['type'])
+
             process = subprocess.Popen(
-                "aria2c '%s' -s10 -k2m -o '%s[%02d].mp4'" % (l, title.decode('utf-8'), i + 1), shell=True
+                "aria2c '%s' -s10 -k2m -o '%s[%02d].%s'" % (l['url'], title.decode('utf-8'), i + 1, ext), shell=True
             )
             process.wait()
         except KeyboardInterrupt:
