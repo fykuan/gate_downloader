@@ -90,7 +90,7 @@ def download_by_aria2c(title, video_list):
 
             print "[INFO] Downloading %s[%02d].%s" % (title.decode('utf-8'), i + 1, ext)
             process = subprocess.Popen(
-                "aria2c '%s' -s10 -k2m -o '%s/%s[%02d].%s'" % (l['url'], title.decode('utf-8'), title.decode('utf-8'), i + 1, ext), shell=True
+                "aria2c '%s' -j5 -s5 -k10m -o '%s/%s[%02d].%s'" % (l['url'], title.decode('utf-8'), title.decode('utf-8'), i + 1, ext), shell=True
             )
             process.wait()
         except KeyboardInterrupt:
@@ -100,6 +100,34 @@ def download_by_aria2c(title, video_list):
             print e
 
 
+def download_list(title, video_list):
+    if not os.path.exists("%s" % title):
+        os.makedirs(title)
+
+    if not os.path.isfile("%s/%s.txt" % (title.decode('utf-8'), title.decode('utf-8'))):
+        f = open("%s/%s.txt" % (title.decode('utf-8'), title.decode('utf-8')), "w+")
+        for i, l in enumerate(video_list):
+            try:
+                if l['type'] == "video/mp4":
+                    ext = "mp4"
+                else:
+                    print "unknown file extendsion: %s" % (l['type'])
+            except Exception as e:
+                print e
+
+            f.write("%s\n" % (l['url']))
+            f.write(" out=%s/%s[%02d].%s\n" % (title, title, i + 1, ext))
+
+    process = subprocess.Popen(
+        "aria2c -i '%s/%s.txt'" % (title.decode('utf-8'), title.decode('utf-8')), shell=True
+    )
+    process.wait()
+
+
+def wrapper(url):
+    pass
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Get URLs for Animes")
     parser.add_argument("--base", "-b", required=True)
@@ -107,4 +135,5 @@ if __name__ == "__main__":
 
     title = get_title(args.base)
 
-    download_by_aria2c(title, get_urls(args.base))
+    #download_by_aria2c(title, get_urls(args.base))
+    download_list(title, get_urls(args.base))
